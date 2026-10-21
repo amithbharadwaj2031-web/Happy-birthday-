@@ -1,0 +1,701 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Aruu 💗</title>
+
+<style>
+* { box-sizing: border-box; }
+
+body {
+    margin: 0;
+    height: 100vh;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #f8f6f1;
+    font-family: Georgia, serif;
+    color: #302821;
+}
+
+.card {
+    width: 90%;
+    max-width: 700px;
+    height: 88vh;
+    background: white;
+    border: 1px solid #cbbda5;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.12);
+    position: relative;
+    overflow: hidden;
+}
+
+.slide {
+    position: absolute;
+    inset: 0;
+    padding: 50px 35px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateX(30px);
+    transition: 0.45s ease;
+}
+
+.slide.active {
+    opacity: 1;
+    visibility: visible;
+    transform: translateX(0);
+}
+
+.eyebrow {
+    font-size: 11px;
+    letter-spacing: 4px;
+    color: #a08c6c;
+    margin-bottom: 12px;
+}
+
+h1 {
+    max-width: 580px;
+    font-size: clamp(25px, 5vw, 40px);
+    line-height: 1.35;
+    font-weight: normal;
+    margin: 10px 0 25px;
+}
+
+.subtitle {
+    color: #806f5b;
+    margin-bottom: 25px;
+}
+
+.puppy {
+    width: 170px;
+    max-width: 45%;
+    object-fit: contain;
+    margin-bottom: 15px;
+    animation: puppyIdle 3s ease-in-out infinite;
+    transition: transform 0.4s ease, opacity 0.3s ease;
+}
+
+.puppy.happy {
+    animation: puppyHappy 0.7s ease-in-out infinite alternate;
+}
+
+.puppy.sad {
+    animation: puppySad 1s ease-in-out infinite alternate;
+}
+
+.puppy.angry {
+    animation: puppyAngry 0.12s linear infinite;
+}
+
+.puppy.confused {
+    animation: puppyConfused 1s ease-in-out infinite alternate;
+}
+
+.puppy.excited {
+    animation: puppyExcited 0.5s ease-in-out infinite alternate;
+}
+
+.puppy.fallen {
+    animation: puppyFall 0.8s forwards;
+}
+
+.buttons {
+    display: flex;
+    gap: 14px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+button {
+    padding: 13px 25px;
+    min-width: 120px;
+    background: white;
+    border: 1px solid #a89473;
+    color: #302821;
+    font-family: Georgia, serif;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+button:hover {
+    background: #302821;
+    color: white;
+    transform: translateY(-3px);
+}
+
+.primary {
+    background: #302821;
+    color: white;
+}
+
+.back {
+    position: absolute;
+    top: 20px;
+    left: 22px;
+    min-width: auto;
+    padding: 7px 12px;
+    font-size: 12px;
+    border: none;
+    color: #806f5b;
+    background: transparent;
+}
+
+.back:hover {
+    background: transparent;
+    color: #302821;
+    transform: translateX(-3px);
+}
+
+.small {
+    position: absolute;
+    bottom: 22px;
+    font-size: 10px;
+    letter-spacing: 2px;
+    color: #a08c6c;
+}
+
+.instructions {
+    max-width: 520px;
+    text-align: left;
+    margin-bottom: 20px;
+}
+
+.instruction {
+    display: flex;
+    gap: 10px;
+    margin: 9px 0;
+    font-size: 14px;
+    line-height: 1.4;
+}
+
+.number {
+    min-width: 23px;
+    height: 23px;
+    border: 1px solid #cbbda5;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 11px;
+}
+
+.warning {
+    color: #8f5f65;
+    font-weight: bold;
+}
+
+.overlay {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: rgba(48,40,33,0.12);
+    backdrop-filter: blur(4px);
+    opacity: 0;
+    visibility: hidden;
+    transition: 0.3s;
+    z-index: 100;
+}
+
+.overlay.show {
+    opacity: 1;
+    visibility: visible;
+}
+
+.popup {
+    width: 85%;
+    max-width: 430px;
+    padding: 30px;
+    background: white;
+    border: 1px solid #cbbda5;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+    text-align: center;
+    transform: scale(0.85);
+    transition: 0.3s;
+}
+
+.overlay.show .popup {
+    transform: scale(1);
+}
+
+.popup-icon {
+    font-size: 45px;
+}
+
+.popup-title {
+    font-size: 25px;
+    margin: 10px 0;
+}
+
+.popup-text {
+    color: #806f5b;
+    line-height: 1.6;
+}
+
+.heart {
+    position: fixed;
+    bottom: -40px;
+    pointer-events: none;
+    animation: heartFly 2.7s forwards;
+    z-index: 90;
+}
+
+/* Final-slide download link */
+.download-link {
+    display: inline-block;
+    padding: 13px 25px;
+    background: #302821;
+    border: 1px solid #a89473;
+    color: white;
+    font-family: Georgia, serif;
+    font-size: 14px;
+    text-decoration: none;
+    transition: 0.2s;
+}
+
+.download-link:hover {
+    background: #806f5b;
+    color: white;
+    transform: translateY(-3px);
+}
+
+@keyframes puppyIdle {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-7px); }
+}
+
+@keyframes puppyHappy {
+    from { transform: translateY(0) rotate(-2deg); }
+    to { transform: translateY(-8px) rotate(2deg); }
+}
+
+@keyframes puppySad {
+    from { transform: translateY(2px) rotate(-2deg); }
+    to { transform: translateY(5px) rotate(2deg); }
+}
+
+@keyframes puppyAngry {
+    0% { transform: translateX(-3px); }
+    50% { transform: translateX(3px); }
+    100% { transform: translateX(-3px); }
+}
+
+@keyframes puppyConfused {
+    from { transform: rotate(-4deg); }
+    to { transform: rotate(4deg); }
+}
+
+@keyframes puppyExcited {
+    from { transform: translateY(0) scale(1); }
+    to { transform: translateY(-12px) scale(1.04); }
+}
+
+@keyframes puppyFall {
+    0% { transform: rotate(0); }
+    100% { transform: rotate(90deg) translateY(50px); }
+}
+
+@keyframes heartFly {
+    0% {
+        opacity: 0;
+        transform: translateY(0) scale(0.5);
+    }
+    20% { opacity: 1; }
+    100% {
+        opacity: 0;
+        transform: translateY(-110vh)
+            translateX(var(--drift))
+            scale(1.3)
+            rotate(var(--rotation));
+    }
+}
+
+@media(max-width:600px) {
+    .card {
+        width: 94%;
+        height: 92vh;
+    }
+
+    .slide {
+        padding: 45px 20px;
+    }
+
+    .puppy {
+        width: 125px;
+    }
+
+    h1 {
+        font-size: 25px;
+    }
+
+    button {
+        padding: 12px 18px;
+    }
+}
+</style>
+</head>
+
+<body>
+<div class="card">
+
+<!-- SLIDE 1 -->
+<section class="slide active" id="slide1">
+
+<img id="puppy1" class="puppy excited"
+     src="puppy_excited.png" alt="Cute puppy">
+
+<div class="eyebrow">a little surprise</div>
+
+<h1>
+    Hii aruuu! 💗<br>
+    i made smtgg for youu!<br>
+    do u wanna check it out?!!
+</h1>
+
+<div class="buttons">
+    <button onclick="slide1Yes()">YESS 💗</button>
+    <button onclick="slide1No()">NO 😛</button>
+</div>
+
+<div class="small">-Made this with all my love and efforts-</div>
+</section>
+
+<!-- SLIDE 2 -->
+<section class="slide" id="slide2">
+
+<button class="back" onclick="goToSlide(1)">← BACK</button>
+
+<img class="puppy happy"
+     src="puppy_happy.png" alt="Happy puppy">
+
+<div class="eyebrow">important information ♡</div>
+
+<h1>
+    Here are a few instructions u gotta follow
+    for this website i made for my bday princess!:
+</h1>
+
+<div class="instructions">
+
+<div class="instruction">
+    <div class="number">1</div>
+    <div>Dont skip past any slide.</div>
+</div>
+
+<div class="instruction">
+    <div class="number">2</div>
+    <div>look after the cutee puppy with love and care!</div>
+</div>
+
+<div class="instruction">
+    <div class="number">3</div>
+    <div>Do not let me miss u this much!.</div>
+</div>
+
+<div class="instruction">
+    <div class="number">4</div>
+    <div class="warning">
+        Discretion: NOT GONNA SURVIVE
+        IF I DONT SEE U SOON.
+    </div>
+</div>
+
+<div class="instruction">
+    <div class="number">5</div>
+    <div>Have funn!</div>
+</div>
+
+</div>
+
+<button class="primary" onclick="goToSlide(3)">
+    OKIEEE, Got itt! →
+</button>
+
+<div class="small">slide 02 · read carefully</div>
+</section>
+
+<!-- SLIDE 3 -->
+<section class="slide" id="slide3">
+
+<button class="back" onclick="goToSlide(2)">← BACK</button>
+
+<img id="hugPuppy" class="puppy confused"
+     src="puppy_confused.png" alt="Confused puppy">
+
+<div class="eyebrow">one veryy important question</div>
+
+<h1>
+    Uhmm..before we go big,<br>
+    when will i be getting hugs again?? 🥺
+</h1>
+
+<div class="buttons">
+    <button onclick="hugSoon()">Soon okiee? ☹️</button>
+    <button onclick="hugIdk()">idk bbyy 😭</button>
+</div>
+
+<div class="small">slide 03 · choose wisely!</div>
+</section>
+
+<!-- SLIDE 4 -->
+<section class="slide" id="slide4">
+
+<button class="back" onclick="goToSlide(3)">← BACK</button>
+
+<img id="lovePuppy" class="puppy happy"
+     src="puppy_happy.png" alt="Happy puppy">
+
+<div class="eyebrow">Here's the bitter truth..</div>
+
+<h1>
+    Ykk?!<br>
+    I lovee youu moreeee! 💗
+</h1>
+
+<div class="buttons">
+    <button onclick="loveYes()">OKIEEEE! 💗</button>
+    <button onclick="loveNo()">ABSOLUTELY NOT 😤</button>
+</div>
+
+<div class="small">slide 04 · this is not debatable btw 😘</div>
+</section>
+
+<!-- SLIDE 5 -->
+<section class="slide" id="slide5">
+
+<button class="back" onclick="goToSlide(4)">← BACK</button>
+
+<img class="puppy excited"
+     src="puppy_excited.png" alt="Excited puppy">
+
+<div class="eyebrow">okayyy...</div>
+
+<h1>
+    Okiee soo..<br>
+    a surprise for u is waiting
+    in the next slide..!! 💗
+</h1>
+
+<div class="subtitle">are u excitedd?!</div>
+
+<button class="primary" onclick="goToSlide(6)">
+    yesssss → → →
+</button>
+
+<div class="small">slide 05 · almost there..</div>
+</section>
+
+<!-- SLIDE 6 -->
+<section class="slide" id="slide6">
+
+<button class="back" onclick="goToSlide(5)">← BACK</button>
+
+<img class="puppy"
+     src="puppy_smiling.png" alt="Smiling puppy">
+
+<div class="eyebrow">finally...</div>
+
+<h1>
+    Something I made<br>
+    just for you. 💗
+</h1>
+
+<div class="video">
+    <p class="subtitle">
+        I made something special for you... 🥹💗
+    </p>
+
+    <a class="download-link"
+       href="https://drive.google.com/uc?export=download&amp;id=11Jzjr5XZNsIYb_3uFrlIF46lDNWL4ti7"
+       target="_blank"
+       rel="noopener noreferrer">
+        DOWNLOAD YOUR SURPRISE 💗 ↓
+    </a>
+</div>
+
+<div class="small">made for my bday princess · forever & ever ♡</div>
+</section>
+
+</div>
+
+<!-- POPUP -->
+<div class="overlay" id="overlay">
+    <div class="popup">
+        <div id="popupIcon" class="popup-icon"></div>
+        <div id="popupTitle" class="popup-title"></div>
+        <div id="popupText" class="popup-text"></div>
+    </div>
+</div>
+
+<script>
+/* SLIDES */
+function goToSlide(number) {
+    document.querySelectorAll(".slide").forEach(slide => {
+        slide.classList.remove("active");
+    });
+
+    document.getElementById("slide" + number).classList.add("active");
+}
+
+/* POPUP */
+let popupTimer;
+
+function popup(icon, title, text, time, next) {
+    document.getElementById("popupIcon").innerHTML = icon;
+    document.getElementById("popupTitle").innerHTML = title;
+    document.getElementById("popupText").innerHTML = text;
+    document.getElementById("overlay").classList.add("show");
+
+    clearTimeout(popupTimer);
+
+    popupTimer = setTimeout(() => {
+        document.getElementById("overlay").classList.remove("show");
+
+        if (next) {
+            setTimeout(() => goToSlide(next), 300);
+        }
+    }, time);
+}
+
+/* SLIDE 1 */
+function slide1Yes() {
+    document.getElementById("puppy1").src = "puppy_excited.png";
+
+    popup(
+        "💗",
+        "YAYYY!",
+        "I knew you would say yess 😭💗",
+        1600,
+        2
+    );
+}
+
+function slide1No() {
+    document.getElementById("puppy1").src = "puppy_sad.png";
+
+    popup(
+        "🥺",
+        "Reallyyy?!",
+        "Look what you've done to the puppy... 😭",
+        2200
+    );
+}
+
+/* SLIDE 3 */
+function hugSoon() {
+    const puppy = document.getElementById("hugPuppy");
+
+    puppy.src = "puppy_excited.png";
+    puppy.className = "puppy excited";
+
+    popup(
+        "🎈",
+        "Soon???",
+        "Okayyy I'll remember that answerr. ☹",
+        1800,
+        4
+    );
+}
+
+function hugIdk() {
+    const puppy = document.getElementById("hugPuppy");
+
+    puppy.src = "puppy_sad.png";
+    puppy.className = "puppy fallen";
+
+    popup(
+        "😭",
+        "IDKKK?!",
+        "THE PUPPY CAN'T HANDLE THIS ANSWER!😭 (Me neither)",
+        2300
+    );
+
+    setTimeout(() => {
+        puppy.className = "puppy confused";
+        puppy.src = "puppy_confused.png";
+    }, 2600);
+}
+
+/* SLIDE 4 */
+function loveYes() {
+    const puppy = document.getElementById("lovePuppy");
+
+    puppy.src = "puppy_excited.png";
+    puppy.className = "puppy excited";
+
+    createHearts();
+
+    popup(
+        "💗",
+        "EXACTLYYYY!",
+        "I LOVEE YOU MORE THAN EVERYTHINGG!. 🥰💗",
+        2000,
+        5
+    );
+}
+
+function loveNo() {
+    const puppy = document.getElementById("lovePuppy");
+
+    puppy.src = "puppy_angry.png";
+    puppy.className = "puppy angry";
+
+    popup(
+        "⚠️",
+        "ERROR 404",
+        "host of this website loves you more<br>" +
+        "please select the other button<br>" +
+        "in order to continue",
+        2800
+    );
+}
+
+/* HEARTS */
+function createHearts() {
+    const hearts = ["💗", "💕", "💖", "♡", "♥", "💞"];
+
+    for (let i = 0; i < 30; i++) {
+        const heart = document.createElement("div");
+
+        heart.className = "heart";
+        heart.innerHTML = hearts[
+            Math.floor(Math.random() * hearts.length)
+        ];
+
+        heart.style.left = Math.random() * 100 + "vw";
+        heart.style.fontSize = (16 + Math.random() * 22) + "px";
+        heart.style.animationDelay = Math.random() * 0.8 + "s";
+
+        heart.style.setProperty(
+            "--drift",
+            (Math.random() * 200 - 100) + "px"
+        );
+
+        heart.style.setProperty(
+            "--rotation",
+            (Math.random() * 90 - 45) + "deg"
+        );
+
+        document.body.appendChild(heart);
+
+        setTimeout(() => heart.remove(), 3500);
+    }
+}
+
+/* CHECK PUPPY IMAGES */
+document.querySelectorAll("img.puppy").forEach(img => {
+    img.addEventListener("error", () => {
+        console.error("Puppy image could not be loaded:", img.src);
+    });
+});
+</script>
+
+</body>
+</html>
